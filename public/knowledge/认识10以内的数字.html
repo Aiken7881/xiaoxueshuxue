@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes, viewport-fit=cover">
+  <title>🐼 数字乐园 · 认识十以内的数字</title>
+  <!-- 柔和的浅色风格，圆润可爱 -->
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: linear-gradient(145deg, #fef9e8 0%, #fff7e6 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', 'Comic Sans MS', 'Chalkboard SE', system-ui, sans-serif;
+      padding: 16px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4a3b2c;
+      touch-action: pan-y; 
+    }
+
+    .course-card {
+      max-width: 1280px;
+      width: 100%;
+      background: rgba(255, 251, 240, 0.8);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-radius: 48px 48px 40px 40px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05), 0 8px 16px rgba(233, 196, 106, 0.1);
+      padding: 24px 20px 32px;
+      border: 2px solid #fff3d6;
+    }
+
+    h1 {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: clamp(24px, 6vw, 36px);
+      font-weight: 700;
+      color: #b45f2b;
+      margin-bottom: 16px;
+      padding-left: 12px;
+      letter-spacing: -0.01em;
+      text-shadow: 3px 3px 0 #feeac1;
+    }
+    h1 span {
+      background: #fdd49e;
+      padding: 6px 16px;
+      border-radius: 60px;
+      font-size: 0.6em;
+      color: #5e3e1c;
+      box-shadow: inset 0 -2px 0 #e6b27a;
+    }
+
+    /* 左右两栏 — 响应式 */
+    .split-layout {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    /* 左侧知识点 — 柔和卡片 */
+    .knowledge-panel {
+      flex: 1.1;
+      min-width: 280px;
+      background: #fffbf2;
+      border-radius: 36px;
+      padding: 22px 16px;
+      box-shadow: inset 0 2px 6px rgba(255,255,240,0.8), 0 12px 18px -8px rgba(180, 120, 50, 0.12);
+      border: 2px solid #ffeac2;
+    }
+
+    .knowledge-title {
+      font-size: 22px;
+      font-weight: 600;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #7b5a3b;
+      padding-left: 8px;
+    }
+    .knowledge-title::before {
+      content: "🧸";
+      font-size: 28px;
+    }
+
+    .number-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(85px, 1fr));
+      gap: 14px 10px;
+    }
+
+    .num-card {
+      background: #ffffffd9;
+      backdrop-filter: blur(4px);
+      border-radius: 24px;
+      padding: 14px 4px 10px;
+      text-align: center;
+      box-shadow: 0 6px 0 #e7cfaa, 0 8px 14px rgba(200, 150, 100, 0.08);
+      border: 2px solid #ffeac1;
+      transition: transform 0.1s ease;
+    }
+
+    .big-digit {
+      font-size: 44px;
+      font-weight: 700;
+      line-height: 1.1;
+      color: #a55d2e;
+      text-shadow: 2px 2px 0 #ffd89c;
+      margin-bottom: 8px;
+    }
+
+    .dot-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 5px 8px;
+      min-height: 32px;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      background: #f7b05e;
+      border-radius: 50%;
+      box-shadow: 0 2px 0 #b4621e, 0 2px 4px rgba(0,0,0,0.05);
+      border: 1px solid #ffeac2;
+    }
+
+    /* 右侧游戏区 */
+    .game-panel {
+      flex: 2;
+      min-width: 320px;
+      background: #fff9ef;
+      border-radius: 40px;
+      padding: 20px 16px 24px;
+      box-shadow: inset 0 1px 8px #fff6e0, 0 12px 20px -10px #d4b58c;
+      border: 2px solid #ffdec2;
+    }
+
+    .game-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+    .game-header h2 {
+      font-size: 24px;
+      font-weight: 650;
+      color: #a76f3d;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .game-header h2 i {
+      font-size: 30px;
+    }
+    .reset-btn {
+      background: #ffe1b3;
+      border: none;
+      border-bottom: 4px solid #d49b5f;
+      padding: 10px 22px;
+      border-radius: 48px;
+      font-size: 18px;
+      font-weight: 600;
+      color: #5a3f25;
+      box-shadow: 0 4px 8px #edd5b0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s;
+      border: 2px solid #fff0d4;
+      touch-action: manipulation;
+    }
+    .reset-btn:active {
+      transform: translateY(2px);
+      border-bottom-width: 2px;
+      box-shadow: 0 2px 4px #edd5b0;
+    }
+
+    .play-tip {
+      background: #f5e5d5;
+      border-radius: 30px;
+      padding: 12px 18px;
+      margin-bottom: 22px;
+      font-size: 17px;
+      color: #614b33;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      border-left: 8px solid #f7b05e;
+    }
+    .play-tip span {
+      background: #b2844c;
+      color: white;
+      border-radius: 30px;
+      padding: 4px 16px;
+      font-weight: 500;
+      font-size: 16px;
+    }
+
+    /* 放置区 (篮子/数量卡片) */
+    .dropzone-area {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 12px 10px;
+      margin-bottom: 30px;
+    }
+
+    .dropzone {
+      background: #fbeed9;
+      border-radius: 28px;
+      padding: 16px 6px 12px;
+      text-align: center;
+      border: 3px dashed #eebb7c;
+      box-shadow: inset 0 0 0 2px #fff7e8, 0 6px 0 #d4a373;
+      min-height: 130px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s;
+      touch-action: none;  /* 防止触摸时滚动/缩放干扰拖拽 */
+    }
+    .dropzone[data-count] {
+      border-style: solid;
+      border-color: #f3cca7;
+      background: #fff3e4;
+    }
+    .dropzone .fruit-icons {
+      font-size: 30px;
+      line-height: 1.3;
+      letter-spacing: 4px;
+      margin-bottom: 4px;
+    }
+    .dropzone .count-badge {
+      background: #e3b27c;
+      color: white;
+      border-radius: 30px;
+      padding: 4px 14px;
+      font-size: 18px;
+      font-weight: 700;
+      display: inline-block;
+      box-shadow: inset 0 -2px 0 #a76f3d;
+    }
+
+    /* 可拖拽的数字卡片池 */
+    .drag-pool {
+      background: #f7e5d2;
+      border-radius: 60px 60px 30px 30px;
+      padding: 22px 14px 18px;
+      border: 3px dotted #fecb89;
+      margin-top: 8px;
+    }
+
+    .drag-pool h3 {
+      font-size: 20px;
+      margin-bottom: 14px;
+      color: #724e2c;
+      padding-left: 12px;
+    }
+
+    .draggable-container {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 16px 18px;
+    }
+
+    .drag-item {
+      width: 85px;
+      height: 95px;
+      background: #ffdbb5;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 0 #b47b4c, 0 8px 14px rgba(150, 100, 50, 0.12);
+      border: 3px solid #ffeac2;
+      cursor: grab;
+      user-select: none;
+      touch-action: none;
+      transition: 0.1s;
+      font-weight: bold;
+      color: #4f321a;
+      transform: rotate(0deg);
+    }
+    .drag-item:active {
+      cursor: grabbing;
+      opacity: 0.9;
+      box-shadow: 0 4px 0 #b47b4c, 0 6px 10px rgba(0,0,0,0.1);
+      transform: translateY(4px);
+    }
+    .drag-item.disabled-drag {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: 0 4px 0 #7e5e3e;
+      transform: translateY(4px);
+      pointer-events: none;  /* 已放置的卡片不能再拖动 */
+    }
+    .drag-digit {
+      font-size: 50px;
+      line-height: 1;
+      font-weight: 800;
+      color: #7b431e;
+      text-shadow: 2px 2px 0 #fec27e;
+      margin-bottom: 2px;
+    }
+    .drag-item small {
+      font-size: 14px;
+      background: #fef7d2;
+      padding: 2px 12px;
+      border-radius: 30px;
+    }
+
+    /* 成功放置到dropzone里的卡片样式 (小巧可爱) */
+    .dropzone .placed-card {
+      margin-top: 6px;
+      background: #cbe6d9;
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #2d5e3c;
+      box-shadow: inset 0 2px 4px #aac7b6;
+      border: 2px solid #b1d0b0;
+      width: fit-content;
+      align-self: center;
+    }
+
+    /* 胜利消息 */
+    .win-message {
+      margin-top: 16px;
+      background: #b1d8b7;
+      border-radius: 36px;
+      padding: 14px 20px;
+      color: #1e4620;
+      font-weight: bold;
+      font-size: 20px;
+      text-align: center;
+      border: 3px solid #ffe3a3;
+      display: none;
+    }
+    .win-message.show {
+      display: block;
+    }
+
+    /* 辅助 */
+    .footer-credit {
+      margin-top: 16px;
+      text-align: right;
+      color: #c9a87c;
+      font-size: 15px;
+    }
+
+    /* 拖拽克隆体样式 */
+    .dragging-clone {
+      position: fixed;
+      z-index: 9999;
+      pointer-events: none;
+      filter: drop-shadow(0 12px 16px rgba(0,0,0,0.15));
+      transform: scale(1.05) rotate(3deg);
+      opacity: 0.9;
+      width: 85px;
+      height: 95px;
+      background: #ffdbb5;
+      border-radius: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 0 #b47b4c, 0 10px 20px rgba(0,0,0,0.1);
+      border: 3px solid #ffeac2;
+      font-weight: bold;
+      color: #4f321a;
+    }
+    .dragging-clone .drag-digit {
+      font-size: 50px;
+    }
+
+    /* 移动端调整 */
+    @media (max-width: 680px) {
+      body { padding: 8px; }
+      .course-card { padding: 16px 10px; }
+      .dropzone-area { grid-template-columns: repeat(3, 1fr); }
+      .drag-item { width: 75px; height: 85px; }
+      .drag-digit { font-size: 44px; }
+    }
+    @media (max-width: 480px) {
+      .dropzone-area { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+<div class="course-card">
+  <h1>
+    🍎 数字小探险
+    <span>0 ~ 10</span>
+  </h1>
+
+  <div class="split-layout">
+    <!-- 左侧：知识点卡片 -->
+    <div class="knowledge-panel">
+      <div class="knowledge-title">📚 数字好朋友</div>
+      <div class="number-grid" id="knowledgeGrid"></div>
+      <div style="margin-top: 18px; padding: 12px; background: #faeedb; border-radius: 30px; color:#624c37; font-size:16px;">
+        ⭐ 每一个数字都有对应数量的小圆点，数一数，记一记！
+      </div>
+    </div>
+
+    <!-- 右侧：拖拽小游戏 —— 拖拖乐（数字与数量配对） -->
+    <div class="game-panel">
+      <div class="game-header">
+        <h2>
+          <i>🧩</i> 拖拖乐·配配对
+        </h2>
+        <button class="reset-btn" id="resetGameBtn" aria-label="重新开始">🔄 再来一局</button>
+      </div>
+      <div class="play-tip">
+        <span>✨ 怎么玩</span> 用手指按住下面的数字卡片，拖到上方数量相同的篮子里！放对位置卡片就会“住”进去～
+      </div>
+
+      <!-- 放置区 (篮子们) 0~10 -->
+      <div class="dropzone-area" id="dropzoneContainer"></div>
+
+      <!-- 可拖拽的数字卡片区 -->
+      <div class="drag-pool">
+        <h3>🐾 拖拽这些数字卡 &nbsp;&nbsp;👇</h3>
+        <div class="draggable-container" id="draggableContainer"></div>
+      </div>
+
+      <!-- 胜利祝贺 -->
+      <div class="win-message" id="winMessage">
+        🎉 太棒啦！所有数字都找到家啦！ 你真是数字小天才！ 🎉
+      </div>
+      <div class="footer-credit">
+        🧸 轻轻拖拽 · 快乐学数字
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function(){
+    "use strict";
+
+    // ---------- 配置 ----------
+    const DIGITS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];  // 0~10
+
+    // 水果表情代表数量 (每个数字对应数量)
+    function getFruitIcons(count) {
+      if (count === 0) return '🫗';  // 空杯子表示0
+      // 用苹果、草莓混搭更可爱
+      let icons = '';
+      for (let i=0; i<count; i++) {
+        icons += i%2===0 ? '🍎' : '🍓';
+      }
+      return icons;
+    }
+
+    // ---------- 渲染左侧知识点 (数字+圆点) ----------
+    const knowledgeGrid = document.getElementById('knowledgeGrid');
+    function renderKnowledge() {
+      let html = '';
+      DIGITS.forEach(num => {
+        let dots = '';
+        for (let i=0; i<num; i++) {
+          dots += '<span class="dot"></span>';
+        }
+        html += `
+          <div class="num-card">
+            <div class="big-digit">${num}</div>
+            <div class="dot-group">${dots || '<span style="opacity:0.5; font-size:14px;">○</span>'}</div>
+          </div>
+        `;
+      });
+      knowledgeGrid.innerHTML = html;
+    }
+    renderKnowledge();
+
+    // ---------- 游戏数据 ----------
+    const dropzoneContainer = document.getElementById('dropzoneContainer');
+    const draggableContainer = document.getElementById('draggableContainer');
+    const winMessageEl = document.getElementById('winMessage');
+
+    // 存储所有dropzone元素，以及当前占用状态
+    let dropZones = [];
+    let dragItems = [];           // 原始可拖拽卡片 (DOM)
+    let currentDragItem = null;   // 当前被拖拽的原始卡片
+    let cloneNode = null;         // 跟随鼠标的克隆体
+    let dragActive = false;
+    let startX = 0, startY = 0;
+    let cloneOffsetX = 42, cloneOffsetY = 47; // 让克隆体中心对准手指
+
+    // 触摸/鼠标移动监听
+    let isTouchDevice = false;
+
+    // ---------- 构建放置区 (0~10) ----------
+    function buildDropZones() {
+      dropzoneContainer.innerHTML = '';
+      dropZones = [];
+      DIGITS.forEach(count => {
+        const zone = document.createElement('div');
+        zone.className = 'dropzone';
+        zone.setAttribute('data-count', count);
+        zone.setAttribute('data-occupied', 'false');   // 是否已经有卡片放入
+        
+        const fruitDiv = document.createElement('div');
+        fruitDiv.className = 'fruit-icons';
+        fruitDiv.textContent = getFruitIcons(count);
+        
+        const badge = document.createElement('div');
+        badge.className = 'count-badge';
+        badge.textContent = count;
+        
+        zone.appendChild(fruitDiv);
+        zone.appendChild(badge);
+        
+        // 用于展示放置成功的数字卡片 (初始为空)
+        const placedSpan = document.createElement('div');
+        placedSpan.className = 'placed-card';
+        placedSpan.id = `placed-${count}`;
+        zone.appendChild(placedSpan);
+        
+        dropzoneContainer.appendChild(zone);
+        dropZones.push(zone);
+      });
+    }
+
+    // ---------- 构建可拖拽卡片 (打乱顺序) ----------
+    function buildDragItems(shuffle = true) {
+      draggableContainer.innerHTML = '';
+      dragItems = [];
+      
+      let numbers = [...DIGITS];
+      if (shuffle) {
+        numbers = shuffleArray(numbers);
+      }
+      
+      numbers.forEach(num => {
+        const card = document.createElement('div');
+        card.className = 'drag-item';
+        card.setAttribute('data-value', num);
+        card.setAttribute('data-placed', 'false');   // 是否已经放置成功
+        card.setAttribute('draggable', 'false');     // 禁用原生拖拽
+        
+        const digitSpan = document.createElement('div');
+        digitSpan.className = 'drag-digit';
+        digitSpan.textContent = num;
+        const smallHint = document.createElement('small');
+        smallHint.textContent = '拖我';
+        
+        card.appendChild(digitSpan);
+        card.appendChild(smallHint);
+        
+        draggableContainer.appendChild(card);
+        dragItems.push(card);
+      });
+      
+      // 重新绑定事件 (因为重建了DOM)
+      attachDragListeners();
+    }
+
+    // 洗牌函数
+    function shuffleArray(arr) {
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    // ---------- 重置游戏 (打乱卡片，清空放置区) ----------
+    function resetGame() {
+      // 清除所有放置区的占用状态，并移除放置的卡片显示
+      dropZones.forEach(zone => {
+        zone.setAttribute('data-occupied', 'false');
+        const placedDiv = zone.querySelector('.placed-card');
+        if (placedDiv) placedDiv.innerHTML = '';   // 清空显示的数字
+      });
+      
+      // 重新构建卡片 (打乱)
+      buildDragItems(true);
+      
+      // 隐藏胜利消息
+      winMessageEl.classList.remove('show');
+      
+      // 如果正在拖拽，强制结束
+      if (dragActive) {
+        cleanDrag();
+      }
+    }
+
+    // ---------- 检查是否胜利 (所有卡片均已放置) ----------
+    function checkVictory() {
+      const allCards = document.querySelectorAll('.drag-item');
+      let placedCount = 0;
+      allCards.forEach(card => {
+        if (card.getAttribute('data-placed') === 'true') placedCount++;
+      });
+      if (placedCount === DIGITS.length) {
+        winMessageEl.classList.add('show');
+      } else {
+        winMessageEl.classList.remove('show');
+      }
+    }
+
+    // ---------- 拖拽逻辑 (模拟拖拽，移动端+PC) ----------
+    function attachDragListeners() {
+      dragItems.forEach(card => {
+        // 移除之前可能存在的事件 (简单重新绑定)
+        card.removeEventListener('mousedown', onDragStart);
+        card.removeEventListener('touchstart', onDragStart);
+        card.addEventListener('mousedown', onDragStart);
+        card.addEventListener('touchstart', onDragStart, {passive: false});
+      });
+    }
+
+    // 开始拖拽
+    function onDragStart(e) {
+      // 阻止默认事件（如滚动、选中）
+      e.preventDefault();
+      if (e.type === 'touchstart') {
+        isTouchDevice = true;
+      } else {
+        isTouchDevice = false;
+      }
+      
+      const card = e.currentTarget;
+      // 如果已经放置成功，不能拖动
+      if (card.getAttribute('data-placed') === 'true') return;
+      if (dragActive) return;
+      
+      // 获取触点坐标
+      const clientX = isTouchDevice ? e.touches[0].clientX : e.clientX;
+      const clientY = isTouchDevice ? e.touches[0].clientY : e.clientY;
+      
+      startX = clientX;
+      startY = clientY;
+      
+      currentDragItem = card;
+      
+      // 创建克隆体
+      cloneNode = document.createElement('div');
+      cloneNode.className = 'dragging-clone';
+      const digitVal = card.getAttribute('data-value');
+      cloneNode.innerHTML = `<div class="drag-digit">${digitVal}</div><small>拖我</small>`;
+      document.body.appendChild(cloneNode);
+      
+      // 设置克隆体初始位置 (中心对准手指)
+      updateClonePosition(clientX, clientY);
+      
+      // 原始卡片半透明效果
+      card.style.opacity = '0.5';
+      card.style.transition = 'opacity 0.1s';
+      
+      dragActive = true;
+      
+      // 绑定全局移动和释放
+      window.addEventListener('mousemove', onDragMove);
+      window.addEventListener('touchmove', onDragMove, {passive: false});
+      window.addEventListener('mouseup', onDragEnd);
+      window.addEventListener('touchend', onDragEnd);
+      window.addEventListener('touchcancel', onDragEnd);
+    }
+
+    function onDragMove(e) {
+      if (!dragActive || !cloneNode || !currentDragItem) return;
+      e.preventDefault();   // 重要: 阻止滚动
+      
+      const clientX = isTouchDevice ? e.touches[0].clientX : e.clientX;
+      const clientY = isTouchDevice ? e.touches[0].clientY : e.clientY;
+      
+      updateClonePosition(clientX, clientY);
+      
+      // 可选: 高亮可放置区域? (略)
+    }
+
+    function updateClonePosition(clientX, clientY) {
+      if (!cloneNode) return;
+      // 让克隆体中心大致在手指位置 (减去宽高一半)
+      const w = cloneNode.offsetWidth || 85;
+      const h = cloneNode.offsetHeight || 95;
+      cloneNode.style.left = (clientX - w/2) + 'px';
+      cloneNode.style.top = (clientY - h/2) + 'px';
+    }
+
+    function onDragEnd(e) {
+      if (!dragActive || !currentDragItem || !cloneNode) {
+        cleanDrag();
+        return;
+      }
+      
+      e.preventDefault();
+      
+      // 获取释放点坐标
+      let clientX, clientY;
+      if (e.type === 'touchend' || e.type === 'touchcancel') {
+        // 对于touchend，没有触点，使用最后已知位置
+        if (e.changedTouches && e.changedTouches.length > 0) {
+          clientX = e.changedTouches[0].clientX;
+          clientY = e.changedTouches[0].clientY;
+        } else {
+          cleanDrag();
+          return;
+        }
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      
+      // 判断落点是否在某个dropzone内
+      const dropTarget = getDropZoneFromPoint(clientX, clientY);
+      
+      const cardValue = parseInt(currentDragItem.getAttribute('data-value'), 10);
+      
+      let placementSuccess = false;
+      
+      if (dropTarget) {
+        const zoneCount = parseInt(dropTarget.getAttribute('data-count'), 10);
+        const occupied = dropTarget.getAttribute('data-occupied') === 'true';
+        
+        // 数字匹配且未被占用
+        if (cardValue === zoneCount && !occupied) {
+          // 放置成功！
+          placementSuccess = true;
+          
+          // 标记放置区已占用
+          dropTarget.setAttribute('data-occupied', 'true');
+          // 在放置区内显示数字卡片
+          const placedDiv = dropTarget.querySelector('.placed-card');
+          if (placedDiv) {
+            placedDiv.textContent = cardValue;
+          }
+          
+          // 标记原始卡片为已放置，并禁用拖拽
+          currentDragItem.setAttribute('data-placed', 'true');
+          currentDragItem.classList.add('disabled-drag');
+          // 可以从容器中隐藏或保留但不可拖动 (保留作为已放置的视觉)
+          // 我们让它保留在卡片池但是变灰禁用，表示已经用掉
+          
+          // 恢复透明度
+          currentDragItem.style.opacity = '1';
+        }
+      }
+      
+      if (!placementSuccess) {
+        // 没放对: 恢复原始卡片透明度，不做其他改变
+        currentDragItem.style.opacity = '1';
+      }
+      
+      // 清理拖拽克隆与事件
+      cleanDrag();
+      
+      // 检查是否胜利
+      checkVictory();
+    }
+
+    // 根据坐标获取下方的dropzone元素
+    function getDropZoneFromPoint(x, y) {
+      // 遍历dropzones检测
+      for (let zone of dropZones) {
+        const rect = zone.getBoundingClientRect();
+        if (x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom) {
+          return zone;
+        }
+      }
+      return null;
+    }
+
+    function cleanDrag() {
+      if (cloneNode) {
+        cloneNode.remove();
+        cloneNode = null;
+      }
+      if (currentDragItem) {
+        currentDragItem.style.opacity = '1';
+        currentDragItem = null;
+      }
+      dragActive = false;
+      
+      window.removeEventListener('mousemove', onDragMove);
+      window.removeEventListener('touchmove', onDragMove);
+      window.removeEventListener('mouseup', onDragEnd);
+      window.removeEventListener('touchend', onDragEnd);
+      window.removeEventListener('touchcancel', onDragEnd);
+    }
+
+    // ---------- 初始化游戏 ----------
+    function initGame() {
+      buildDropZones();
+      buildDragItems(true);  // 打乱顺序增加趣味
+      winMessageEl.classList.remove('show');
+      
+      // 重置按钮监听
+      document.getElementById('resetGameBtn').addEventListener('click', () => {
+        resetGame();
+      });
+    }
+
+    // 开始！
+    initGame();
+
+    // 防止移动端页面拖动/缩放干扰 (touch事件已经preventDefault)
+    // 额外处理: 避免从空白处拖动页面
+    document.addEventListener('touchmove', (e) => {
+      if (dragActive) e.preventDefault();
+    }, { passive: false });
+    
+    // 确保拖拽时不会选中文本
+    document.addEventListener('selectstart', (e) => e.preventDefault());
+    
+  })();
+</script>
+</body>
+</html>

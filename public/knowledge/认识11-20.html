@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>✨ 11~20数字乐园 · 拖拖乐</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f9f3e8 0%, #fff3db 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', 'Comic Sans MS', 'Chalkboard SE', system-ui, sans-serif;
+            padding: 12px;
+            margin: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .course-container {
+            max-width: 1300px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 48px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08), 0 6px 12px rgba(241, 184, 119, 0.15);
+            padding: 24px 20px 30px;
+            border: 2px solid #ffefd2;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.4rem;
+            font-weight: 700;
+            color: #c44f1c;
+            text-shadow: 4px 4px 0 #ffe3b7;
+            letter-spacing: 2px;
+            margin: 0 0 10px 0;
+            word-break: break-word;
+        }
+
+        .sub-title {
+            text-align: center;
+            font-size: 1.2rem;
+            color: #a1582b;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .sub-title span {
+            background: #ffddb0;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-weight: 500;
+            box-shadow: inset 0 1px 3px #fff8, 0 4px 6px rgba(0,0,0,0.03);
+        }
+
+        /* 左右两列布局 */
+        .split-layout {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+        }
+
+        /* 左侧知识点 —— 浅色卡片 */
+        .knowledge-panel {
+            flex: 1 1 280px;
+            min-width: 260px;
+            background: #fffbf4;
+            border-radius: 36px;
+            padding: 22px 16px;
+            box-shadow: inset 0 0 0 1px #fff8e7, 0 12px 18px -8px rgba(200, 120, 60, 0.12);
+            border: 2px solid #ffeac2;
+        }
+
+        .knowledge-panel h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.9rem;
+            color: #7b4a2b;
+            margin-bottom: 18px;
+            padding-left: 8px;
+            border-left: 12px solid #fcb375;
+        }
+
+        .number-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .number-card {
+            background: #ffffffd6;
+            border-radius: 28px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 8px #f0dbc6, 0 1px 0 #fff inset;
+            border: 2px solid #ffdbb5;
+            transition: transform 0.1s;
+        }
+
+        .big-number {
+            font-size: 3rem;
+            font-weight: 800;
+            min-width: 70px;
+            text-align: center;
+            color: #c35e1e;
+            text-shadow: 3px 3px 0 #ffd89c;
+            line-height: 1;
+        }
+
+        .number-detail {
+            flex: 1;
+        }
+
+        .chinese-read {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #4d2f18;
+            margin-bottom: 6px;
+        }
+
+        .dot-representation {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 6px;
+        }
+
+        .dot {
+            width: 18px;
+            height: 18px;
+            background: #f9b953;
+            border-radius: 50%;
+            box-shadow: 0 3px 0 #c16f1e, 0 2px 6px rgba(0,0,0,0.1);
+            border: 1px solid #ffe5b9;
+        }
+
+        .dot.small-dot {
+            width: 14px;
+            height: 14px;
+        }
+
+        /* 右侧游戏区 */
+        .game-panel {
+            flex: 2 1 500px;
+            min-width: 300px;
+            background: #fffaf1;
+            border-radius: 40px;
+            padding: 22px 16px 28px;
+            box-shadow: inset 0 0 0 1px #fff3df, 0 12px 18px -8px rgba(190, 130, 70, 0.15);
+            border: 2px solid #ffd7a7;
+        }
+
+        .game-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            margin-bottom: 18px;
+        }
+
+        .game-header h3 {
+            font-size: 1.9rem;
+            color: #9b5e2e;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .reset-btn {
+            background: #fdd7a8;
+            border: none;
+            border-radius: 60px;
+            padding: 10px 22px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #6b3e1a;
+            border-bottom: 5px solid #d49c5b;
+            box-shadow: 0 3px 8px #ebc194;
+            cursor: pointer;
+            transition: all 0.08s;
+            border: 2px solid #ffefd1;
+            backdrop-filter: blur(4px);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .reset-btn:active {
+            transform: translateY(3px);
+            border-bottom-width: 2px;
+            box-shadow: 0 1px 4px #d49c5b;
+        }
+
+        .drag-instruction {
+            background: #fff0d4;
+            border-radius: 28px;
+            padding: 10px 18px;
+            margin: 6px 0 18px 0;
+            font-size: 1.2rem;
+            color: #764d29;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 2px dashed #fcb26b;
+        }
+
+        .drag-instruction i {
+            font-size: 1.8rem;
+        }
+
+        /* 可拖拽数字卡片区 */
+        .drag-area {
+            margin-bottom: 28px;
+        }
+
+        .drag-label {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #8b5a2e;
+            margin-bottom: 12px;
+        }
+
+        .card-deck {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 12px;
+            justify-content: center;
+            min-height: 110px;
+            background: #ffe9d1;
+            padding: 16px 12px;
+            border-radius: 48px;
+            box-shadow: inset 0 4px 8px #eecfae, 0 6px 0 #dbaa78;
+            border: 2px solid #fec28b;
+        }
+
+        .drag-card {
+            width: 80px;
+            height: 90px;
+            background: #fef7d2;
+            border-radius: 24px 24px 28px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 0 #c9823e, 0 6px 12px rgba(150, 80, 10, 0.2);
+            border: 3px solid #ffdbb5;
+            cursor: grab;
+            user-select: none;
+            touch-action: none;  /* 阻止触屏滚动 */
+            transition: 0.1s;
+            font-weight: 800;
+            color: #633d1a;
+            position: relative;
+            z-index: 5;
+        }
+
+        .drag-card:active {
+            cursor: grabbing;
+            opacity: 0.9;
+        }
+
+        .drag-card .card-number {
+            font-size: 3.2rem;
+            line-height: 1;
+            margin-top: 6px;
+            text-shadow: 2px 2px 0 #ffc489;
+        }
+
+        .drag-card .card-emoji {
+            font-size: 1.6rem;
+            margin-top: -6px;
+        }
+
+        /* 放置区 (目标星星格子) */
+        .dropzone-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #8b5a2e;
+            margin: 20px 0 10px;
+        }
+
+        .dropzone-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 14px 10px;
+        }
+
+        .drop-slot {
+            background: #fff6e7;
+            border-radius: 26px;
+            padding: 12px 6px 10px;
+            box-shadow: inset 0 2px 6px #ffe1b3, 0 6px 0 #be8a58;
+            border: 3px solid #fecb91;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 130px;
+            transition: 0.1s;
+        }
+
+        .drop-slot.matched {
+            background: #daf1d8;
+            box-shadow: inset 0 2px 6px #b7daa3, 0 4px 0 #6e9f4e;
+            border-color: #9fc97c;
+            opacity: 0.9;
+        }
+
+        .star-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 3px 4px;
+            margin: 6px 0 6px;
+            min-height: 48px;
+        }
+
+        .star {
+            font-size: 1.7rem;
+            line-height: 1;
+            filter: drop-shadow(0 2px 2px #d49f4a);
+        }
+
+        .slot-footer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #a5551b;
+            background: #ffe3b1;
+            padding: 6px 18px;
+            border-radius: 40px;
+            margin-top: 4px;
+            border: 2px solid #ffc489;
+        }
+
+        .matched .slot-footer {
+            background: #b1da9b;
+            color: #2a6218;
+        }
+
+        .win-message {
+            text-align: center;
+            margin-top: 22px;
+            font-size: 1.7rem;
+            font-weight: bold;
+            color: #b45f1b;
+            background: #fff1c1;
+            padding: 12px;
+            border-radius: 60px;
+            border: 3px solid #fec27e;
+        }
+
+        /* 拖拽克隆体样式 */
+        .drag-ghost {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            filter: drop-shadow(0 12px 18px rgba(0,0,0,0.2));
+            transform: rotate(3deg) scale(1.05);
+            opacity: 0.9;
+            width: 80px;
+            height: 90px;
+            background: #fff3c9;
+            border-radius: 24px 24px 28px 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 0 #b56f2e, 0 10px 20px rgba(0,0,0,0.2);
+            border: 4px solid #ffb669;
+            font-weight: 800;
+            color: #633d1a;
+        }
+
+        .drag-ghost .card-number {
+            font-size: 3.2rem;
+        }
+
+        /* 响应式微调 */
+        @media (max-width: 640px) {
+            .course-container { padding: 16px 12px; }
+            h1 { font-size: 2rem; }
+            .big-number { font-size: 2.5rem; min-width: 55px; }
+            .drag-card { width: 70px; height: 80px; }
+            .drag-card .card-number { font-size: 2.7rem; }
+            .drop-slot { min-height: 120px; }
+            .star { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .split-layout { gap: 14px; }
+            .knowledge-panel { padding: 16px 10px; }
+        }
+
+        /* 禁用状态 */
+        .drag-card.disabled-card {
+            opacity: 0.3;
+            pointer-events: none;
+            box-shadow: 0 4px 0 #7a522e;
+            filter: grayscale(0.3);
+        }
+    </style>
+</head>
+<body>
+<div class="course-container">
+    <h1>🐼 11~20 数字好朋友</h1>
+    <div class="sub-title">
+        <span>🔢 数一数 · 拖一拖</span>
+        <span>🧸 左边学 · 右边玩</span>
+    </div>
+
+    <div class="split-layout">
+        <!-- 左侧知识点区 -->
+        <div class="knowledge-panel">
+            <h2>
+                <span>📘</span> 数字小课堂
+            </h2>
+            <div class="number-grid" id="knowledgeGrid"></div>
+            <div style="margin-top: 24px; padding: 12px; background: #ffedd6; border-radius: 32px; text-align: center; color:#935e2e;">
+                ⭐ 每个数字都有对应的小星星数量哦！
+            </div>
+        </div>
+
+        <!-- 右侧游戏区：拖拽配对 -->
+        <div class="game-panel">
+            <div class="game-header">
+                <h3>
+                    <span>🎣</span> 拖拖钓鱼乐
+                </h3>
+                <button class="reset-btn" id="resetGameBtn">🔄 再来一局</button>
+            </div>
+            <div class="drag-instruction">
+                <span>👉👆</span> 按住数字卡片，拖到正确的星星格子上松开！
+            </div>
+
+            <!-- 可拖拽数字卡片区 -->
+            <div class="drag-area">
+                <div class="drag-label">🐟 数字小鱼 (按住拖动) </div>
+                <div class="card-deck" id="draggableContainer"></div>
+            </div>
+
+            <!-- 目标放置区 (星星格子) -->
+            <div class="dropzone-title">🌟 数一数星星，把数字送回家</div>
+            <div class="dropzone-grid" id="dropzoneContainer"></div>
+
+            <!-- 胜利信息 -->
+            <div id="winMessage" class="win-message"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        "use strict";
+
+        // ---------- 配置 ----------
+        const MIN_NUM = 11;
+        const MAX_NUM = 20;
+        const NUMBERS = [11,12,13,14,15,16,17,18,19,20];
+
+        // 中文读法
+        const chineseMap = {
+            11:'十一',12:'十二',13:'十三',14:'十四',15:'十五',
+            16:'十六',17:'十七',18:'十八',19:'十九',20:'二十'
+        };
+
+        // 状态管理
+        let dragCards = [];              // 剩余数字卡片 (数值)
+        let matchedCount = 0;
+        let totalPairs = NUMBERS.length;
+        
+        // 拖拽系统变量
+        let isDragging = false;
+        let dragEnabled = true;
+        let currentDragValue = null;     // 当前拖拽的数字值
+        let currentDragElement = null;   // 原始卡片DOM
+        let ghostElement = null;         // 跟随的克隆体
+        let startPointerX = 0, startPointerY = 0;
+        let currentPointerX = 0, currentPointerY = 0;
+        
+        // DOM 元素
+        const knowledgeGrid = document.getElementById('knowledgeGrid');
+        const draggableContainer = document.getElementById('draggableContainer');
+        const dropzoneContainer = document.getElementById('dropzoneContainer');
+        const winMessageDiv = document.getElementById('winMessage');
+        const resetBtn = document.getElementById('resetGameBtn');
+
+        // 存储所有dropzone元素及其对应的数量值
+        let dropZones = []; // { element, value, matched }
+
+        // ---------- 渲染左侧知识点 (11~20 带星星) ----------
+        function renderKnowledge() {
+            let html = '';
+            for (let num of NUMBERS) {
+                const chinese = chineseMap[num];
+                // 生成对应数量的小圆点 (最多20个，用flex)
+                let dotsHtml = '';
+                for (let i=0; i<num; i++) {
+                    dotsHtml += `<span class="dot"></span>`;
+                }
+                html += `
+                    <div class="number-card">
+                        <div class="big-number">${num}</div>
+                        <div class="number-detail">
+                            <div class="chinese-read">${chinese}</div>
+                            <div class="dot-representation">
+                                ${dotsHtml}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+            knowledgeGrid.innerHTML = html;
+        }
+
+        // ---------- 渲染右侧游戏：放置区(星星格子) 和 可拖拽卡片 ----------
+        function renderGame() {
+            // 打乱卡片顺序 (让游戏有趣)
+            const shuffled = [...NUMBERS].sort(() => Math.random() - 0.5);
+            dragCards = [...shuffled];
+            
+            // 绘制可拖拽卡片
+            renderDraggableCards();
+            
+            // 绘制星星格子 (dropzone)  顺序固定为11~20，方便孩子数
+            let dropHtml = '';
+            dropZones = [];
+            for (let num of NUMBERS) {
+                dropHtml += `
+                    <div class="drop-slot" data-drop-value="${num}" id="drop-${num}">
+                        <div class="star-group" id="stars-${num}"></div>
+                        <div class="slot-footer">❓</div>
+                    </div>
+                `;
+            }
+            dropzoneContainer.innerHTML = dropHtml;
+            
+            // 填充星星 (每个格子显示对应数量星星)
+            for (let num of NUMBERS) {
+                const starGroup = document.getElementById(`stars-${num}`);
+                let starsHtml = '';
+                for (let i=0; i<num; i++) {
+                    starsHtml += `<span class="star">⭐</span>`;
+                }
+                starGroup.innerHTML = starsHtml;
+                
+                const slot = document.getElementById(`drop-${num}`);
+                dropZones.push({
+                    element: slot,
+                    value: num,
+                    matched: false
+                });
+            }
+            
+            matchedCount = 0;
+            winMessageDiv.innerHTML = '';
+        }
+
+        function renderDraggableCards() {
+            let cardsHtml = '';
+            dragCards.forEach(val => {
+                cardsHtml += `
+                    <div class="drag-card" data-card-value="${val}" id="card-${val}-${Date.now() + Math.random()}">
+                        <div class="card-number">${val}</div>
+                        <div class="card-emoji">🐠</div>
+                    </div>
+                `;
+            });
+            draggableContainer.innerHTML = cardsHtml;
+            
+            // 重新绑定事件 (使用事件委托，但拖拽需要直接绑定，也可委托mousedown)
+            // 但我们需要在每个卡片上绑定指针事件，便于拖拽；采用事件委托方式监听 mousedown / touchstart
+        }
+
+        // ---------- 重置游戏 ----------
+        function resetGame() {
+            // 清除拖拽状态
+            if (isDragging) {
+                cleanupDrag();
+            }
+            renderGame();
+        }
+
+        // ---------- 检查胜利 ----------
+        function checkWin() {
+            if (matchedCount === totalPairs) {
+                winMessageDiv.innerHTML = '🎉 太棒啦！所有数字都找到家啦！ 🎉';
+            } else {
+                winMessageDiv.innerHTML = '';
+            }
+        }
+
+        // ---------- 配对成功处理 ----------
+        function markAsMatched(dropValue, cardElement) {
+            // 找到对应的dropzone
+            const zone = dropZones.find(z => z.value === dropValue && !z.matched);
+            if (!zone) return false;
+            
+            // 标记为已匹配
+            zone.matched = true;
+            zone.element.classList.add('matched');
+            const footer = zone.element.querySelector('.slot-footer');
+            if (footer) footer.textContent = dropValue;  // 显示数字
+            
+            // 禁用卡片 (隐藏或禁用)
+            if (cardElement) {
+                cardElement.classList.add('disabled-card');
+                cardElement.style.pointerEvents = 'none';
+                // 从dragCards数组中移除该值 (只移除一次)
+                const idx = dragCards.indexOf(dropValue);
+                if (idx !== -1) dragCards.splice(idx, 1);
+            }
+            
+            matchedCount++;
+            checkWin();
+            return true;
+        }
+
+        // ---------- 拖拽系统 (支持鼠标+触摸) ----------
+        function onPointerDown(e) {
+            // 阻止默认事件（防止滚动或选中）
+            e.preventDefault();
+            
+            // 找到实际的卡片元素 (可能点中内部数字或emoji)
+            let target = e.target.closest('.drag-card');
+            if (!target) return;
+            if (!dragEnabled) return;
+            if (target.classList.contains('disabled-card')) return;
+            
+            const cardValue = parseInt(target.dataset.cardValue);
+            if (isNaN(cardValue)) return;
+            
+            // 初始化拖拽
+            isDragging = true;
+            currentDragValue = cardValue;
+            currentDragElement = target;
+            
+            // 获取触点位置
+            const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+            startPointerX = clientX;
+            startPointerY = clientY;
+            currentPointerX = clientX;
+            currentPointerY = clientY;
+            
+            // 创建幽灵克隆体
+            createGhost(target, clientX, clientY);
+            
+            // 添加全局监听
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('touchmove', onPointerMove, { passive: false });
+            window.addEventListener('mouseup', onPointerUp);
+            window.addEventListener('touchend', onPointerUp);
+            window.addEventListener('touchcancel', onPointerCancel);
+        }
+
+        function onPointerMove(e) {
+            if (!isDragging || !ghostElement) {
+                return;
+            }
+            e.preventDefault();   // 关键：阻止滚动
+            
+            const clientX = e.clientX || (e.touches ? e.touches[0].clientX : 0);
+            const clientY = e.clientY || (e.touches ? e.touches[0].clientY : 0);
+            if (!clientX) return;
+            
+            currentPointerX = clientX;
+            currentPointerY = clientY;
+            
+            // 移动幽灵
+            if (ghostElement) {
+                ghostElement.style.left = (clientX - 40) + 'px';  // 宽度一半偏移
+                ghostElement.style.top = (clientY - 45) + 'px';
+            }
+        }
+
+        function onPointerUp(e) {
+            if (!isDragging || !currentDragElement) {
+                cleanupDrag();
+                return;
+            }
+            e.preventDefault();
+            
+            // 获取释放点下方的元素 (用于检测dropzone)
+            const clientX = e.clientX || (e.changedTouches ? e.changedTouches[0].clientX : currentPointerX);
+            const clientY = e.clientY || (e.changedTouches ? e.changedTouches[0].clientY : currentPointerY);
+            
+            // 隐藏幽灵
+            if (ghostElement) {
+                ghostElement.style.display = 'none';
+            }
+            
+            // 通过坐标获取元素
+            const elemUnderPointer = document.elementFromPoint(clientX, clientY);
+            const dropSlot = elemUnderPointer?.closest('.drop-slot');
+            
+            let dropSuccess = false;
+            if (dropSlot && currentDragValue !== null) {
+                const dropValue = parseInt(dropSlot.dataset.dropValue);
+                // 检查是否匹配且该格子未被匹配
+                const zone = dropZones.find(z => z.element === dropSlot);
+                if (zone && !zone.matched && dropValue === currentDragValue) {
+                    // 配对成功！
+                    markAsMatched(dropValue, currentDragElement);
+                    dropSuccess = true;
+                }
+            }
+            
+            // 如果不成功，卡片保留；幽灵消失，不做其他变化
+            // 但卡片样式不变
+            
+            cleanupDrag();
+            
+            // 如果所有卡片都配对完了，禁用拖拽？不用，disabled-card已处理
+        }
+
+        function onPointerCancel(e) {
+            cleanupDrag();
+        }
+
+        function createGhost(originalCard, clientX, clientY) {
+            // 移除旧ghost
+            if (ghostElement) ghostElement.remove();
+            
+            const cardValue = originalCard.dataset.cardValue;
+            ghostElement = document.createElement('div');
+            ghostElement.className = 'drag-ghost';
+            ghostElement.innerHTML = `
+                <div class="card-number">${cardValue}</div>
+                <div class="card-emoji">🐠</div>
+            `;
+            ghostElement.style.left = (clientX - 40) + 'px';
+            ghostElement.style.top = (clientY - 45) + 'px';
+            document.body.appendChild(ghostElement);
+        }
+
+        function cleanupDrag() {
+            if (ghostElement) {
+                ghostElement.remove();
+                ghostElement = null;
+            }
+            isDragging = false;
+            currentDragValue = null;
+            currentDragElement = null;
+            
+            window.removeEventListener('mousemove', onPointerMove);
+            window.removeEventListener('touchmove', onPointerMove);
+            window.removeEventListener('mouseup', onPointerUp);
+            window.removeEventListener('touchend', onPointerUp);
+            window.removeEventListener('touchcancel', onPointerCancel);
+        }
+
+        // ---------- 事件委托绑定 (因为卡片会重新生成) ----------
+        function bindDelegation() {
+            draggableContainer.addEventListener('mousedown', onPointerDown);
+            draggableContainer.addEventListener('touchstart', onPointerDown, { passive: false });
+            
+            // 防止从非卡片元素开始拖拽时页面滚动
+            draggableContainer.addEventListener('dragstart', (e) => e.preventDefault());
+        }
+
+        // ---------- 初始化 ----------
+        function init() {
+            renderKnowledge();
+            renderGame();
+            bindDelegation();
+            
+            resetBtn.addEventListener('click', () => {
+                if (isDragging) cleanupDrag();
+                resetGame();
+            });
+        }
+
+        init();
+
+        // 适配移动端：禁止双指缩放页面 (不影响整体)
+        window.addEventListener('touchmove', (e) => {
+            if (isDragging) e.preventDefault();
+        }, { passive: false });
+        
+    })();
+</script>
+</body>
+</html>
